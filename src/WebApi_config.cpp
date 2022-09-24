@@ -32,7 +32,7 @@ void WebApiConfigClass::loop()
 
 void WebApiConfigClass::onConfigGet(AsyncWebServerRequest* request)
 {
-    request->send(LittleFS, CONFIG_FILENAME, String(), true);
+    request->send(LittleFS, CONFIG_JSON_FILENAME, String(), true);
 }
 
 void WebApiConfigClass::onConfigDelete(AsyncWebServerRequest* request)

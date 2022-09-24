@@ -5,3 +5,5 @@
 .vscode/ipch
 .vscode/settings.json
 platformio-device-monitor*.log
+.vscode/extensions.json
+.gitignore

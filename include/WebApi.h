@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #pragma once
 
+#include "WebApi_static.h"
 #include "WebApi_config.h"
 #include "WebApi_devinfo.h"
 #include "WebApi_dtu.h"
@@ -26,6 +27,7 @@ private:
     AsyncWebServer _server;
     AsyncEventSource _events;
 
+    WebApiStaticClass _webApiStatic;
     WebApiConfigClass _webApiConfig;
     WebApiDevInfoClass _webApiDevInfo;
     WebApiDtuClass _webApiDtu;

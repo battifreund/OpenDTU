@@ -7,6 +7,7 @@
 #include "AsyncJson.h"
 #include "defaults.h"
 
+
 WebApiClass::WebApiClass()
     : _server(HTTP_PORT)
     , _events("/events")
@@ -17,6 +18,7 @@ void WebApiClass::init()
 {
     _server.addHandler(&_events);
 
+    _webApiStatic.init(&_server);
     _webApiConfig.init(&_server);
     _webApiDevInfo.init(&_server);
     _webApiDtu.init(&_server);

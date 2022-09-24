@@ -2,8 +2,11 @@
 #pragma once
 
 #include <Arduino.h>
+#include <ArduinoJson.h>
 
 #define CONFIG_FILENAME "/config.bin"
+#define CONFIG_JSON_FILENAME "/config.json"
+
 #define CONFIG_VERSION 0x00011500 // 0.1.21 // make sure to clean all after change
 
 #define WIFI_MAX_SSID_STRLEN 31
@@ -85,10 +88,17 @@ public:
     void init();
     bool read();
     bool write();
+    bool JSONread(const char* filename = CONFIG_JSON_FILENAME);
+    bool JSONwrite(const char* filename = CONFIG_JSON_FILENAME);
     void migrate();
     CONFIG_T& get();
 
     INVERTER_CONFIG_T* getFreeInverterSlot();
+
+protected:
+    DynamicJsonDocument JSONserialize();
+    bool JSONserialize(Stream &output);
+    bool JSONdeserialize(Stream &input);
 };
 
 extern ConfigurationClass Configuration;

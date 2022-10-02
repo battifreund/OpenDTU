@@ -23,6 +23,12 @@ bool SystemConfigParaCommand::handleResponse(InverterAbstract* inverter, fragmen
         inverter->SystemConfigPara()->appendFragment(offs, fragment[i].fragment, fragment[i].len);
         offs += (fragment[i].len);
     }
-    inverter->SystemConfigPara()->setLastUpdate(millis());
+    inverter->SystemConfigPara()->setLastUpdateRequest(millis());
+    inverter->SystemConfigPara()->setLastLimitRequestSuccess(CMD_OK);
     return true;
+}
+
+void SystemConfigParaCommand::gotTimeout(InverterAbstract* inverter)
+{
+    inverter->SystemConfigPara()->setLastLimitRequestSuccess(CMD_NOK);
 }

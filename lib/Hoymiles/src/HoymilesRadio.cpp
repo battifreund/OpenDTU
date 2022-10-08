@@ -161,6 +161,11 @@ bool HoymilesRadio::isIdle()
     return !_busyFlag;
 }
 
+bool HoymilesRadio::isConnected()
+{
+    return _radio->isChipConnected();
+}
+
 void HoymilesRadio::openReadingPipe()
 {
     serial_u s;
@@ -196,12 +201,9 @@ uint8_t HoymilesRadio::getTxNxtChannel()
 
 void HoymilesRadio::switchRxCh()
 {
-
-    // portDISABLE_INTERRUPTS();
     _radio->stopListening();
     _radio->setChannel(getRxNxtChannel());
     _radio->startListening();
-    // portENABLE_INTERRUPTS();
 }
 
 serial_u HoymilesRadio::convertSerialToRadioId(serial_u serial)
@@ -236,7 +238,9 @@ void HoymilesRadio::sendEsbPacket(CommandAbstract* cmd)
     openWritingPipe(s);
     _radio->setRetries(3, 15);
 
-    Serial.print(F("TX Channel: "));
+    Serial.print(F("TX "));
+    Serial.print(cmd->getCommandName());
+    Serial.print(F(" Channel: "));
     Serial.print(_radio->getChannel());
     Serial.print(F(" --> "));
     cmd->dumpDataPayload(Serial);
@@ -274,8 +278,7 @@ void HoymilesRadio::dumpBuf(const char* info, uint8_t buf[], uint8_t len)
         Serial.print(String(info));
 
     for (uint8_t i = 0; i < len; i++) {
-        Serial.print(buf[i], 16);
-        Serial.print(" ");
+        Serial.printf("%02X ", buf[i]);
     }
     Serial.println(F(""));
 }

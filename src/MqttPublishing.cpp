@@ -34,7 +34,7 @@ void MqttPublishingClass::loop()
             auto inv = Hoymiles.getInverterByPos(i);
 
             char buffer[sizeof(uint64_t) * 8 + 1];
-            snprintf(buffer, sizeof(buffer), "%0lx%08lx",
+            snprintf(buffer, sizeof(buffer), "%0x%08x",
                 ((uint32_t)((inv->serial() >> 32) & 0xFFFFFFFF)),
                 ((uint32_t)(inv->serial() & 0xFFFFFFFF)));
             String subtopic = String(buffer);
@@ -59,12 +59,17 @@ void MqttPublishingClass::loop()
                 MqttSettings.publish(subtopic + "/device/hwpartnumber", String(inv->DevInfo()->getHwPartNumber()));
 
                 // Hardware version
-                MqttSettings.publish(subtopic + "/device/hwversion", String(inv->DevInfo()->getHwVersion()));
+                MqttSettings.publish(subtopic + "/device/hwversion", inv->DevInfo()->getHwVersion());
             }
 
             if (inv->SystemConfigPara()->getLastUpdate() > 0) {
                 // Limit
                 MqttSettings.publish(subtopic + "/status/limit_relative", String(inv->SystemConfigPara()->getLimitPercent()));
+
+                uint16_t maxpower = inv->DevInfo()->getMaxPower();
+                if (maxpower > 0) {
+                    MqttSettings.publish(subtopic + "/status/limit_absolute", String(inv->SystemConfigPara()->getLimitPercent() * maxpower / 100));
+                }
             }
 
             MqttSettings.publish(subtopic + "/status/reachable", String(inv->isReachable()));
@@ -106,7 +111,7 @@ String MqttPublishingClass::getTopic(std::shared_ptr<InverterAbstract> inv, uint
     }
 
     char buffer[sizeof(uint64_t) * 8 + 1];
-    snprintf(buffer, sizeof(buffer), "%0lx%08lx",
+    snprintf(buffer, sizeof(buffer), "%0x%08x",
         ((uint32_t)((inv->serial() >> 32) & 0xFFFFFFFF)),
         ((uint32_t)(inv->serial() & 0xFFFFFFFF)));
     String invSerial = String(buffer);

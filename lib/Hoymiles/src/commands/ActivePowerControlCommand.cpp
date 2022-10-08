@@ -20,6 +20,11 @@ ActivePowerControlCommand::ActivePowerControlCommand(uint64_t target_address, ui
     setTimeout(2000);
 }
 
+String ActivePowerControlCommand::getCommandName()
+{
+    return "ActivePowerControl";
+}
+
 void ActivePowerControlCommand::setActivePowerLimit(float limit, PowerLimitControlType type)
 {
     uint16_t l = limit * 10;
@@ -44,7 +49,12 @@ bool ActivePowerControlCommand::handleResponse(InverterAbstract* inverter, fragm
     if ((getType() == PowerLimitControlType::RelativNonPersistent) || (getType() == PowerLimitControlType::RelativPersistent)) {
         inverter->SystemConfigPara()->setLimitPercent(getLimit());
     } else {
-        // TODO(tbnobody): Not implemented yet because we only can publish the percentage value
+        uint16_t max_power = inverter->DevInfo()->getMaxPower();
+        if (max_power > 0) {
+            inverter->SystemConfigPara()->setLimitPercent(static_cast<float>(getLimit()) / max_power * 100);
+        } else {
+            // TODO(tbnobody): Not implemented yet because we only can publish the percentage value
+        }
     }
     inverter->SystemConfigPara()->setLastUpdateCommand(millis());
     inverter->SystemConfigPara()->setLastLimitCommandSuccess(CMD_OK);

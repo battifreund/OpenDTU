@@ -13,9 +13,6 @@ public:
     explicit CommandAbstract(uint64_t target_address = 0, uint64_t router_address = 0);
     virtual ~CommandAbstract() {};
 
-    template <typename T>
-    bool isA();
-
     const uint8_t* getDataPayload();
     void dumpDataPayload(Stream& stream);
 
@@ -29,6 +26,8 @@ public:
 
     void setTimeout(uint32_t timeout);
     uint32_t getTimeout();
+
+    virtual String getCommandName() = 0;
 
     void setSendCount(uint8_t count);
     uint8_t getSendCount();

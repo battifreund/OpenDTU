@@ -13,12 +13,6 @@ CommandAbstract::CommandAbstract(uint64_t target_address, uint64_t router_addres
     setTimeout(0);
 }
 
-template <typename T>
-bool CommandAbstract::isA()
-{
-    return dynamic_cast<T*>(this) != NULL;
-}
-
 const uint8_t* CommandAbstract::getDataPayload()
 {
     _payload[_payload_size] = crc8(_payload, _payload_size);
@@ -29,8 +23,7 @@ void CommandAbstract::dumpDataPayload(Stream& stream)
 {
     const uint8_t* payload = getDataPayload();
     for (uint8_t i = 0; i < getDataSize(); i++) {
-        stream.print(payload[i], HEX);
-        stream.print(" ");
+        stream.printf("%02X ", payload[i]);
     }
     stream.println("");
 }

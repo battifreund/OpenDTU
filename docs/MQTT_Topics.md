@@ -7,6 +7,7 @@ The base topic, as configured in the web GUI is prepended to all follwing topics
 | Topic                                   | R / W | Description                                          | Value / Unit               |
 | --------------------------------------- | ----- | ---------------------------------------------------- | -------------------------- |
 | dtu/ip                                  | R     | IP address of OpenDTU                                | IP address                 |
+| dtu/hostname                            | R     | Current hostname of the dtu (as set in web GUI)      |                            |
 | dtu/rssi                                | R     | WiFi network quality                                 | db value                   |
 | dtu/status                              | R     | Indicates whether OpenDTU network is reachable       | online /  offline          |
 | dtu/uptime                              | R     | Time in seconds since startup                        | seconds                    |
@@ -60,9 +61,11 @@ cmd topics are used to set values. Status topics are updated from values set in 
 | Topic                                     | R / W | Description                                          | Value / Unit               |
 | ----------------------------------------- | ----- | ---------------------------------------------------- | -------------------------- |
 | [serial]/status/limit_relative            | R     | Current applied production limit of the inverter     | % of total possible output |
+| [serial]/status/limit_absolute            | R     | Current applied production limit of the inverter     | Watt (W)                   |
 | [serial]/status/reachable                 | R     | Indicates whether the inverter is reachable          | 0 or 1                     |
 | [serial]/status/producing                 | R     | Indicates whether the inverter is producing AC power | 0 or 1                     |
-| [serial]/cmd/limit_persistent_relative    | W     | Set the inverter limit as a percentage of total production capability. The  value will survive the night without power | %                          |
-| [serial]/cmd/limit_persistent_absolute    | W     | Set the inverter limit as a absolute value. The  value will survive the night without power | Watt (W)                   |
-| [serial]/cmd/limit_nonpersistent_relative | W     | Set the inverter limit as a percentage of total production capability. The  value will reset to the last persistent value at night without power | %                          |
-| [serial]/cmd/limit_nonpersistent_absolute | W     | Set the inverter limit as a absolute value. The  value will reset to the last persistent value at night without power | Watt (W)                   |
+| [serial]/cmd/limit_persistent_relative    | W     | Set the inverter limit as a percentage of total production capability. The  value will survive the night without power. The updated value will show up in the web GUI and limit_relative topic immediatly. | %                          |
+| [serial]/cmd/limit_persistent_absolute    | W     | Set the inverter limit as a absolute value. The  value will survive the night without power. The updated value will show up in the web GUI and limit_relative topic after around 4 minutes. | Watt (W)                   |
+| [serial]/cmd/limit_nonpersistent_relative | W     | Set the inverter limit as a percentage of total production capability. The  value will reset to the last persistent value at night without power. The updated value will show up in the web GUI and limit_relative topic immediatly. | %                          |
+| [serial]/cmd/limit_nonpersistent_absolute | W     | Set the inverter limit as a absolute value. The  value will reset to the last persistent value at night without power. The updated value will show up in the web GUI and limit_relative topic after around 4 minutes. | Watt (W)                   |
+| [serial]/cmd/power                        | W      | Turn the inverter on (1) or off (0)                 | 0 or 1                     |
